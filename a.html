@@ -1,0 +1,129 @@
+<html>
+	<head>
+		<script src="https://unpkg.com/vue@3"></script>
+	</head>	
+	<body>
+		<div id="app">a:{{ obj.message }}
+			<div v-bind="obj"></div>
+			<p v-bind:var="obj.message">Using v-html directive: <span v-html="obj.message"></span></p>
+			<button v-bind:disabled="obj.isButtonDisabled" @click="mounted($event),obj.isActive=!obj.isActive" v-html="obj.count">Button</button>
+			<p @click='mounted($event)' :value="obj.count">{{ obj.Message.split('').reverse() }}</p>
+			<a :href="obj.message"> ... </a>
+			<p v-if="obj.isDisabled">Now you see me</p>
+			<a :["obj.attributeName"]="obj.attributeName"> ... </a>
+			<li v-for="(item,key) in obj.Message.split('').reverse()">{{item}}{{key}}</li>
+			<p>{{fullName}}</p>
+			<div :class="[{ active: obj.isActive }, obj.firstName]"></div>
+			<div
+					class="static"
+					:class="{ active: obj.isActive, 'text-danger': obj.hasError }"
+					v-if="!obj.isActive"><input v-model="fullName" @change='change($event)'/></div>
+			<div
+					class="static"
+					:class="{ active: obj.isActive, 'text-danger': obj.hasOk }"
+					v-else-if="obj.hasOk"><input v-model="" @change='change($event)'/></div>
+			<div :style="styleObject">
+				<li v-for="n in evenNumbers">{{ n }}</li>
+			</div>
+			<input type="checkbox" id="checkBox" v-model="obj.isActive" />
+			<label for="checkBox">{{ obj.isActive }}</label>
+			<div>Checked names: {{ checkedNames }}</div>
+
+			<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+			<label for="jack">Jack</label>
+
+			<input type="checkbox" id="john" value="John" v-model="checkedNames">
+			<label for="john">John</label>
+
+			<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+			<label for="mike">Mike</label>
+				<select v-model="selected">
+					<option v-for="option in options" :value="option.value">
+					{{ option.text }}
+					</option>
+				</select>
+
+				<div>Selected: {{ selected }}</div>
+		</div>
+
+		<script>
+			//	import { createApp } from 'vue'
+			// 从一个单文件组件中导入根组件
+			//import App from './App.vue'
+
+			//const app = createApp(App);
+			//console.log(app);
+			const { createApp } = Vue
+			//console.log(createApp); 
+			createApp({
+							data() {
+											return {
+															obj:{
+																			message: 'Hello',
+																			isButtonDisabled: false,
+																			isDisabled: true,
+																			Message: "qwe",
+																			attributeName:'href',
+																			count: 1,
+																			firstName:"qwe",
+																			lastName:"asd",
+																			hasError:false,
+																			hasOk:true,
+																			isActive:true,
+
+																		},
+															styleObject: {
+																			color: 'red',
+																			fontSize: '13px'
+																		},
+															numbers: [1, 2, 3, 4, 5],
+															checkedNames: [],
+															selected: 'A',
+															options: [
+																			{ text: 'One', value: 'A' },
+																			{ text: 'Two', value: 'B' },
+																			{ text: 'Three', value: 'C' }
+																		]
+
+
+														}
+										},
+
+							computed: {
+											fullName: {
+															// getter
+															get() {
+																			return this.obj.firstName + ' ' + this.obj.lastName
+																		},
+															// setter
+															set(newValue) {
+																			// 注意：我们这里使用的是解构赋值语法
+																			[this.obj.firstName, this.obj.lastName] = newValue.split(' ')
+																		}
+														},
+											evenNumbers() {
+															return this.numbers.filter(n => n % 2 === 0)
+														}
+
+										},
+							methods:{
+											mounted(e) {
+															// `this` 指向当前组件实例
+															console.log(e.target.innerText);
+															console.log(e.target.getAttribute('value')) // => 1
+
+															// 数据属性也可以被更改
+															this.obj.count ++;
+														},
+											change(e){
+															this.fullName=this.fullName
+															//this.obj.firstName=e.target.getAttribute('value')
+															//		this.obj.lasttName=e.target.getAttribute('value')
+														},
+										}
+						}
+
+						).mount('#app')
+		</script>
+	</body>
+</html>
